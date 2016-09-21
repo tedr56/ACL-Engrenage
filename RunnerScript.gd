@@ -71,12 +71,12 @@ func _input(event):
 var forward = 0
 var boost = 0
 
-master func PlayerForward():
+remote func PlayerForward():
 #	RunCount = RunCount + 0.5
 #	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
 	forward = forward + 0.5
 
-master func PlayerBoost():	
+remote func PlayerBoost():	
 #	RunCount = RunCount + 5
 #	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
 #	RunCoeff  = RunCoeff * 0.5
