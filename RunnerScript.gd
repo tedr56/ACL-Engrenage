@@ -19,6 +19,8 @@ func _ready():
 	set_process_input(true)
 	set_fixed_process(true)
 
+	get_node("Timer").start()
+
 func _player_connected(id):
 	pass
 func _player_disconnected(id):
@@ -34,6 +36,7 @@ remote func register_player(id):
 	print("New Player" , id)
 	PlayerInfo.append(id)
 	assert(get_tree().is_network_server())
+	registered_player(PlayerInfo.size())
 	for peer in PlayerInfo:
 		rpc_id(peer, "registered_player", PlayerInfo.size())
 
@@ -41,24 +44,55 @@ remote func unregister_player(id):
 	print("PlayerLeft" , id)
 	PlayerInfo.remove(id)
 	assert(get_tree().is_network_server())
+	rpc_id(1 , "registered_player", PlayerInfo.size())
 	for peer in PlayerInfo:
 		rpc_id(peer, "registered_player", PlayerInfo.size())
 
-remote func registered_player(players):
-	get_node("Players").set_text(str(players))
+sync func registered_player(players):
+	get_node("Players").set_text(var2str(players))
 
+var timeOut = true
+	
 func _input(event):
-	if (event.is_action("ui_roll_down")):
-		PlayerForward(1 * RunCoeff)
-	if (event.is_action("ui_roll_up")):
-		PlayerForward(10 * RunCoeff)
-		RunCoeff = RunCoeff * 0.7
-	if (event.is_action("ui_accept")):
-		TurnToClient()
+	var time = get_node("Timer")
+	if (timeOut):
+		if (event.is_action("ui_roll_down")):
+			PlayerForward()
+		if (event.is_action("ui_roll_up")):
+			PlayerBoost()
+		if (event.is_action("ui_accept")):
+			TurnToClient()
+		time.start()
+		timeOut = false
+	
+	
 
-func PlayerForward(Count):
-	RunCount = RunCount + Count
-	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
+var forward = 0
+var boost = 0
 
-func _fixed_process(delta):
-	pass
+master func PlayerForward():
+#	RunCount = RunCount + 0.5
+#	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
+	forward = forward + 0.5
+
+master func PlayerBoost():	
+#	RunCount = RunCount + 5
+#	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
+#	RunCoeff  = RunCoeff * 0.5
+	boost = boost + 1
+	RunCoeff  = RunCoeff * 0.5 * max(1, PlayerInfo.size())
+
+sync func _fixed_process(delta):
+	var RunSprite = get_node("Sprite")
+	var Count = (forward * 0.2 * max(1, RunCoeff*2)) + (boost * 30 * RunCoeff)
+	RunSprite.translate(Vector2(Count, 0))
+	#RunCount = max(0, RunCount - 1 )
+	RunCoeff = min(1, RunCoeff + (0.001 / max(1, boost)))
+	forward = max(0, forward - 1)
+	boost = max(0, boost - 1.5)
+	get_node("Coeff").set_text(var2str(RunCoeff))
+	get_node("forward").set_text(var2str(forward))
+	get_node("boost").set_text(var2str(boost))
+
+func _on_Timer_timeout():
+	timeOut = true

@@ -64,6 +64,54 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
+[node name="Coeff" type="Label" parent="Runner"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 433.0
+margin/top = 238.0
+margin/right = 473.0
+margin/bottom = 252.0
+text = "0"
+align = 2
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="forward" type="Label" parent="Runner"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 433.0
+margin/top = 271.0
+margin/right = 473.0
+margin/bottom = 285.0
+text = "0"
+align = 2
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="boost" type="Label" parent="Runner"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 545.0
+margin/top = 271.0
+margin/right = 585.0
+margin/bottom = 285.0
+text = "0"
+align = 2
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
 [node name="Sprite" type="Sprite" parent="Runner"]
 
 texture = ExtResource( 2 )
@@ -80,5 +128,14 @@ playback/active = true
 playback/speed = 1.0
 blend_times = [  ]
 autoplay = ""
+
+[node name="Timer" type="Timer" parent="Runner"]
+
+process_mode = 1
+wait_time = 0.1
+one_shot = true
+autostart = false
+
+[connection signal="timeout" from="Runner/Timer" to="Runner" method="_on_Timer_timeout"]
 
 

@@ -7,7 +7,7 @@ const DEFAULT_PORT = 8910 # some random number, pick your port properly
 func _player_connected(id):
 	#someone connected, start the game!
 	var runner = load("res://Runner.tscn").instance()
-	runner.connect("game_finished",self,"_end_game",[],CONNECT_DEFERRED) # connect deferred so we can safely erase it from the callback
+	#runner.connect("game_finished",self,"_end_game",[],CONNECT_DEFERRED) # connect deferred so we can safely erase it from the callback
 	
 	get_tree().get_root().add_child(runner)
 	hide()
