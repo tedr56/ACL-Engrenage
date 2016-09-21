@@ -38,8 +38,8 @@ remote func register_player(id):
 		rpc_id(peer, "registered_player", PlayerInfo.size())
 
 remote func registered_player(players):
-	get_node("Players").set_text(players)
-	
+	get_node("Players").set_text(str(players))
+
 func _input(event):
 	if (event.is_action("ui_roll_down")):
 		PlayerForward(1 * RunCoeff)
