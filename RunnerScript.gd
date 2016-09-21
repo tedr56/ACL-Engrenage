@@ -28,11 +28,18 @@ func _connected_ok():
 func _connected_fail():
 	pass
 func _server_disconnected():
-	pass
+	rpc("unregister_player", get_tree().get_network_unique_id())
 
 remote func register_player(id):
 	print("New Player" , id)
 	PlayerInfo.append(id)
+	assert(get_tree().is_network_server())
+	for peer in PlayerInfo:
+		rpc_id(peer, "registered_player", PlayerInfo.size())
+
+remote func unregister_player(id):
+	print("PlayerLeft" , id)
+	PlayerInfo.remove(id)
 	assert(get_tree().is_network_server())
 	for peer in PlayerInfo:
 		rpc_id(peer, "registered_player", PlayerInfo.size())
