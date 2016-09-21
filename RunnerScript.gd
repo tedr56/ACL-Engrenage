@@ -74,7 +74,7 @@ sync func PlayerForward():
 	forward = forward + 0.5
 	for peer in PlayerInfo:
 		#rpc_id(peer, "newForward", forward)
-		rset_id(peer("forward", forward)
+		rset_id(peer, "forward", forward)
 
 sync func PlayerBoost():	
 #	RunCount = RunCount + 5
@@ -85,8 +85,8 @@ sync func PlayerBoost():
 	for peer in PlayerInfo:
 		#rpc_id(peer, "newBoost", boost)
 		#rpc_id(peer, "newCoeff", RunCoeff)
-		rset_id(peer("RunCoeff", RunCoeff)
-		rset_id(peer("boost", boost)
+		rset_id(peer, "RunCoeff", RunCoeff)
+		rset_id(peer, "boost", boost)
 
 sync func newForward(forw):
 	forward = forw
