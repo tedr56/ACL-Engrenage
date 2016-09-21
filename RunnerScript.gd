@@ -20,6 +20,7 @@ func _ready():
 	set_fixed_process(true)
 
 	get_node("Timer").start()
+	get_node("Sprite").set_network_mode(RPC_MODE_SLAVE)
 
 func _player_connected(id):
 	pass
@@ -82,7 +83,7 @@ master func PlayerBoost():
 	boost = boost + 1
 	RunCoeff  = RunCoeff * 0.5 * max(1, PlayerInfo.size())
 
-sync func _fixed_process(delta):
+remote func _fixed_process(delta):
 	var RunSprite = get_node("Sprite")
 	var Count = (forward * 0.2 * max(1, RunCoeff*2)) + (boost * 30 * RunCoeff)
 	RunSprite.translate(Vector2(Count, 0))
