@@ -68,28 +68,31 @@ func _input(event):
 sync var forward = 0
 sync var boost = 0
 
-remote func PlayerForward():
+sync func PlayerForward():
 #	RunCount = RunCount + 0.5
 #	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
 	forward = forward + 0.5
 	for peer in PlayerInfo:
-		rpc_id(peer, "newForward", forward)
+		#rpc_id(peer, "newForward", forward)
+		rset_id(peer("forward", forward)
 
-remote func PlayerBoost():	
+sync func PlayerBoost():	
 #	RunCount = RunCount + 5
 #	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
 #	RunCoeff  = RunCoeff * 0.5
 	boost = boost + 1
 	RunCoeff  = RunCoeff * 0.5 * max(1, PlayerInfo.size())
 	for peer in PlayerInfo:
-		rpc_id(peer, "newBoost", boost)
-		rpc_id(peer, "newCoeff", RunCoeff)
+		#rpc_id(peer, "newBoost", boost)
+		#rpc_id(peer, "newCoeff", RunCoeff)
+		rset_id(peer("RunCoeff", RunCoeff)
+		rset_id(peer("boost", boost)
 
-remote func newForward(forw):
+sync func newForward(forw):
 	forward = forw
-remote func newBoost(boo):
+sync func newBoost(boo):
 	boost = boo
-remote func newCoeff(coeff):
+sync func newCoeff(coeff):
 	RunCoeff = coeff
 
 func _fixed_process(delta):
