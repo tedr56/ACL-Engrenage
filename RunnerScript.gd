@@ -68,22 +68,22 @@ func _input(event):
 	
 	
 
-var forward = 0
-var boost = 0
+sync var forward = 0
+sync var boost = 0
 
-remote func PlayerForward():
+sync func PlayerForward():
 #	RunCount = RunCount + 0.5
 #	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
 	forward = forward + 0.5
 
-remote func PlayerBoost():	
+sync func PlayerBoost():	
 #	RunCount = RunCount + 5
 #	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
 #	RunCoeff  = RunCoeff * 0.5
 	boost = boost + 1
 	RunCoeff  = RunCoeff * 0.5 * max(1, PlayerInfo.size())
 
-remote func _fixed_process(delta):
+sync func _fixed_process(delta):
 	var RunSprite = get_node("Sprite")
 	var Count = (forward * 0.2 * max(1, RunCoeff*2)) + (boost * 30 * RunCoeff)
 	RunSprite.translate(Vector2(Count, 0))
