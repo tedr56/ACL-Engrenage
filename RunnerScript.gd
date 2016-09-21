@@ -1,7 +1,7 @@
 extends Node2D
 
 var RunCount = 0
-var PlayerInfo = []
+var PlayerInfo = [1]
 
 var RunCoeff  = 1
 var RunDeltaX = 0
@@ -21,6 +21,7 @@ func _ready():
 
 	get_node("Timer").start()
 	get_node("Sprite").set_network_mode(RPC_MODE_SLAVE)
+	get_node("Players").set_network_mode(RPC_MODE_SLAVE)
 
 func _player_connected(id):
 	pass
@@ -58,32 +59,40 @@ func _input(event):
 	var time = get_node("Timer")
 	if (timeOut):
 		if (event.is_action("ui_roll_down")):
-			PlayerForward()
+			rpc_id(1, "PlayerForward")
 		if (event.is_action("ui_roll_up")):
-			PlayerBoost()
-		if (event.is_action("ui_accept")):
-			TurnToClient()
+			rpc_id(1, "PlayerBoost")
 		time.start()
 		timeOut = false
-	
-	
 
 sync var forward = 0
 sync var boost = 0
 
-sync func PlayerForward():
+remote func PlayerForward():
 #	RunCount = RunCount + 0.5
 #	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
 	forward = forward + 0.5
+	for peer in PlayerInfo:
+		rpc_id(peer, "newForward", forward)
 
-sync func PlayerBoost():	
+remote func PlayerBoost():	
 #	RunCount = RunCount + 5
 #	RunCount = RunCount * max(1, PlayerInfo.size() * 0.7)
 #	RunCoeff  = RunCoeff * 0.5
 	boost = boost + 1
 	RunCoeff  = RunCoeff * 0.5 * max(1, PlayerInfo.size())
+	for peer in PlayerInfo:
+		rpc_id(peer, "newBoost", boost)
+		rpc_id(peer, "newCoeff", RunCoeff)
 
-sync func _fixed_process(delta):
+remote func newForward(forw):
+	forward = forw
+remote func newBoost(boo):
+	boost = boo
+remote func newCoeff(coeff):
+	RunCoeff = coeff
+
+func _fixed_process(delta):
 	var RunSprite = get_node("Sprite")
 	var Count = (forward * 0.2 * max(1, RunCoeff*2)) + (boost * 30 * RunCoeff)
 	RunSprite.translate(Vector2(Count, 0))
