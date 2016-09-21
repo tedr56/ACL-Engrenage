@@ -31,6 +31,7 @@ func _server_disconnected():
 	pass
 
 remote func register_player(id):
+	print("New Player" , id)
 	PlayerInfo.append(id)
 	assert(get_tree().is_network_server())
 	for peer in PlayerInfo:
