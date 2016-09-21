@@ -10,7 +10,7 @@ length = 1.0
 loop = false
 step = 0.1
 
-[node name="Scene" type="Node2D"]
+[node name="RunnerScene" type="Node2D"]
 
 [node name="Runner" type="Node2D" parent="."]
 

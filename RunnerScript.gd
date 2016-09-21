@@ -10,16 +10,6 @@ var DEFAULT_PORT = 10000
 var DEFAULT_IP = "192.168.0.13"
 
 func _ready():
-	var host = NetworkedMultiplayerENet.new()
-	host.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_RANGE_CODER)
-	var err = host.create_server(DEFAULT_PORT,100) # max: 1 peer, since it's a 2 players game
-	if (err!=OK):
-		#is another server running?
-		_set_status("Can't host, address in use.",false)
-		return
-		
-	get_tree().set_network_peer(host)
-	
 	get_tree().connect("network_peer_connected", self, "_player_connected")
 	get_tree().connect("network_peer_disconnected", self, "_player_disconnected")
 	get_tree().connect("connected_to_server", self, "_connected_ok")
@@ -48,12 +38,6 @@ remote func register_player(id):
 
 remote func registered_player(players):
 	get_node("Players").set_text(players)
-
-func TurnToClient():
-	var host = NetworkedMultiplayerENet.new()
-	host.set_compression_mode(NetworkedMultiplayerENet.COMPRESS_RANGE_CODER)
-	host.create_client(DEFAULT_IP,DEFAULT_PORT)
-	get_tree().set_network_peer(host)
 	
 func _input(event):
 	if (event.is_action("ui_roll_down")):
